@@ -1,0 +1,45 @@
+.content-width {
+	margin: 0 auto;
+	width: 90%;
+	max-width: 70em;
+}
+
+
+.user-color {
+	margin: 0 0 2em;
+	height: 1em;
+}
+
+.colorpicker ul {
+	margin: 1em auto;
+	text-align: center;
+}
+
+.color-list li {
+	display: inline-block;
+	margin: 0 0.5em;
+}
+
+.color-list a {
+	display: block;
+	width: 6em;
+	border-radius: 5px;
+	color: #666;
+	text-decoration: none;
+}
+
+.color-list .svg svg {
+	fill: currentColor;
+	margin: 0 0 1em;
+	border-bottom: 4px solid transparent;
+	vertical-align: bottom;
+}
+
+.color-list a.is-active svg {
+	border-bottom-color: inherit;
+}
+
+form {
+	margin: 1em;
+	text-align: center;
+}
