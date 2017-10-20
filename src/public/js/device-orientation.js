@@ -1,8 +1,7 @@
-;(function($) {
+;(function() {
 
 	// define semi-global variables (vars that are "global" in this file's scope) and prefix them
 	// with sg so we can easily distinguish them from "normal" vars
-	var $sgBody = $('body');
 
 	/**
 	* handle device orientation change
@@ -17,7 +16,8 @@
 			dir: data.alpha,//compass direction the device is facing in degrees
 		};
 
-		$sgBody.trigger('tiltchange.deviceorientation', newData);
+		const evt = new CustomEvent('tiltchange.deviceorientation', {detail: newData});
+		document.body.dispatchEvent(evt);
 	};
 
 
@@ -28,15 +28,14 @@
 	var init = function() {
 
 		if (window.DeviceOrientationEvent) {
-			//this only checks if the *browser* supports device orientation. It doesn't say anything about the device!
 			window.addEventListener('deviceorientation', deviceOrientationHandler, false);
 		} else {
 			//notify the rest of the page deviceorientation is not supported
-			$sgBody.trigger('nosupport.deviceorientation');
+			const evt = new CustomEvent('nosupport.deviceorientation');
+			document.body.dispatchEvent(evt);
 		}
 	};
 	
+	document.addEventListener('DOMContentLoaded', init);
 
-	$(document).ready(init);
-
-})(jQuery);
+})();

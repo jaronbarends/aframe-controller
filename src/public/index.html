@@ -5,7 +5,7 @@
 
 	<meta charset="utf-8">
 
-	<title>360</title>
+	<title>Hub</title>
 
 	<meta name="apple-mobile-web-app-capable" content="yes" />
 	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -13,32 +13,66 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
 
 	<link type="text/css" rel="stylesheet" href="css/shared.css" />
-	<link type="text/css" rel="stylesheet" href="css/viewer.css" />
+	<link type="text/css" rel="stylesheet" href="css/hub.css" />
 	<link type="text/css" rel="stylesheet" href="css/qr-code.css" />
 
 </head>
 
 <body>
+	<h1>Main hub</h1>
 
-
-		<div class="viewer-container">
-			<div id="viewer" class="viewer">
-			</div>
-		</div>
-
+	<!-- Start qr-box -->
 		<div id="qr-box" class="qr-box">
+			QR-code for remote:
 			<div id="qr-code" class="qr-code"></div>
 		</div>
+	<!-- End qr-box -->
 
-		<div class="debug-stepper">
-			<a href="#" id="stepper">zup</a><span id="currDir">0</span>
-		</div>
+	<div id="id-box" class="id-box">
+		user id: <span class="user-id"></span>
+	</div>
 
+
+	<!-- Start device-view -->
+	<div class="device-view">
+	
 		<div id="devices-container" class="devices-container">
 			<!-- will be filled with joining devices -->
 		</div>
 
-		<table id="orientation-table" class="gyro-table u-hidden">
+		<div id="clone-src" class="u-is-hidden">
+
+			<div id="device-clone-src" class="user-device u-is-hidden">
+				<div class="user">
+					<!-- user name here -->
+				</div>
+
+				<div class="device-3d-container">
+					<div class="device">
+						<div class="device__face device__face--front">
+							<div class="device__screen">
+								<div class="user-color"></div>
+							</div>
+							<div class="device__button"></div>
+						</div>
+						<div class="device__face device__face--back"></div>
+						<div class="device__face device__face--left"></div>
+						<div class="device__face device__face--right"></div>
+						<div class="device__face device__face--top"></div>
+						<div class="device__face device__face--bottom"></div>
+
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div><!-- /.device-view -->
+
+	<!-- End device-view -->
+
+	<!-- Start table-view -->
+
+		<table id="orientation-table" class="table-view gyro-table u-is-hidden">
 			<tr>
 				<th>tilt LR (gamma)</th>
 				<th>tilt FB (beta)</th>
@@ -46,20 +80,20 @@
 			</tr>
 		</table>
 
-		<div id="clone-src" class="u-hidden">
+	<!-- End table-view -->
 
-		</div>
-
-	<!-- Including the JS libraries that we use -->
-	<script src="//code.jquery.com/jquery-2.1.3.min.js"></script>
 
 	<!-- Socket.io library -->
 	<script src="/socket.io/socket.io.js"></script>
 
 	<!-- Main JavaScript file -->
-	<script src="js/viewer.js"></script>
-	<script src="js/socket.js"></script>
+	<script src="js/hub.js"></script>
+	<script src="js/device-view.js"></script>
+	<script src="js/table-view.js"></script>
 	<script src="js/add-qr-code.js"></script>
+
+	<!-- initialize socket server connection - anything that needs connectionready event should be added before this -->
+	<script src="js/connection-init.js"></script>
 
 </body>
 </html>

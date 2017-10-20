@@ -21,14 +21,7 @@ html {
 body {
 	font-family: Helvetica, arial, sans-serif;
 	font-size: 1.6rem;
-	color: #666;
 	line-height: 1.75;
-}
-
-h1 {
-	font-size: 3.6rem;
-	font-weight: bold;
-	text-align: center;
 }
 
 
@@ -44,9 +37,7 @@ h1 {
 
 	input[type="submit"] {
 		border-color: transparent;
-		padding: 0.5em 2em;
-		background: #1f81b1;
-		color: white;
+		background: cornflowerblue;
 	}
 	
 /*-- End forms --*/
@@ -54,7 +45,7 @@ h1 {
 
 /*-- Start utility classes --*/
 	
-	.u-hidden {
+	.u-is-hidden {
 		display: none;
 	}
 	

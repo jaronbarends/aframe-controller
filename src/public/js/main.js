@@ -16,7 +16,6 @@
 	* @returns {undefined}
 	*/
 	const init = function() {
-		console.log('init');
 		var car = document.getElementById('car__body');
 		car.addEventListener('mouseenter', () => {
 			car.setAttribute('scale', {x:2, y: 2, z:2});

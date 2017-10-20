@@ -10,36 +10,18 @@
 	height: 1em;
 }
 
-.colorpicker ul {
-	margin: 1em auto;
-	text-align: center;
-}
 
-.color-list li {
+
+.control {
 	display: inline-block;
-	margin: 0 0.5em;
+	width: 100px;
+	height: 100px;
 }
 
-.color-list a {
-	display: block;
-	width: 6em;
-	border-radius: 5px;
-	color: #666;
-	text-decoration: none;
+.control--brake {
+	background: #c00;
 }
 
-.color-list .svg svg {
-	fill: currentColor;
-	margin: 0 0 1em;
-	border-bottom: 4px solid transparent;
-	vertical-align: bottom;
-}
-
-.color-list a.is-active svg {
-	border-bottom-color: inherit;
-}
-
-form {
-	margin: 1em;
-	text-align: center;
+.control--gas {
+	background: #0c0;
 }

@@ -1,4 +1,4 @@
-;(function($) {
+;(function() {
 
 	'use strict';
 
@@ -15,37 +15,17 @@
 	// with sg so we can easily distinguish them from "normal" vars
 	var sgUsername = '',
 		sgRole = 'remote',
-		sgOrientation = {},
+		sgUserColor,
+		sgOrientation = {
+			tiltLR: 0,
+			tiltFB: 0,
+			dir: 0
+		},
 		sgCompassCorrection = 0,
 		sgScreenAngle,
 		sgUsers = [];//array of users, in order of joining
 
-	var sgColors = [
-			{
-				name: 'Candy white',
-				imgColor: 'B4B4',
-				cssColor: '#dedad0'
-			},
-			{
-				name: 'Deep black',
-				imgColor: '2T2T',
-				cssColor: '#202020 '
-			},
-			{
-				name: 'Red',
-				imgColor: 'G2G2',
-				cssColor: '#8c2222'
-			}
-		];
-
 	
-	/**
-	* add identifier for this user
-	* @returns {undefined}
-	*/
-	// var initIdentifier = function() {
-	// 	$('#id-box').find('.user-id').text(io.id);
-	// };
 
 
 	/**
@@ -55,9 +35,7 @@
 	*/
 	var joinedHandler = function(data) {
 		//this remote has been joined the room
-		$('#login-form').hide();
-		initDeviceOrientation();
-		initColorPicker();
+		document.getElementById('login-form').classList.add('u-is-hidden');
 	};
 
 
@@ -67,7 +45,6 @@
 	* @returns {undefined}
 	*/
 	var newUserHandler = function(users) {
-		//console.log('new user has joined: '+data.id+' ('+data.role+')');
 	};
 
 
@@ -76,7 +53,6 @@
 	* @returns {undefined}
 	*/
 	var userDisconnectHandler = function() {
-		
 	};
 	
 
@@ -90,22 +66,22 @@
 		io.on('joined', joinedHandler);
 		io.on('newuser', newUserHandler);
 		io.on('disconnect', userDisconnectHandler);
-	};
-
+	}
+;
 
 	/**
 	* send event to server to request entry to room
 	* @returns {undefined}
 	*/
 	var joinRoom = function() {
-		var data = {
+		var user = {
 				role: sgRole,
 				id: io.id,
-				username: sgUsername
-				// color: sgUserColor
+				username: sgUsername,
+				color: sgUserColor
 			};
 
-		io.emit('join', data);
+		io.emit('join', user);
 	};
 
 
@@ -113,21 +89,21 @@
 	* set an identifying color for this user
 	* @returns {undefined}
 	*/
-	// var setUserColor = function() {
-	// 	var colors = ['Aqua', 'Aquamarine', 'Black', 'Blue', 'BlueViolet', 'Brown', 'CadetBlue', 'Chartreuse', 'Chocolate', 'Coral', 'CornflowerBlue', 'Crimson', 'DarkBlue', 'DarkCyan', 'DarkGoldenRod', 'DarkGray', 'DarkGreen', 'DarkMagenta', 'DarkOliveGreen', 'DarkOrange', 'DarkOrchid', 'DarkRed', 'DarkSalmon', 'DarkSeaGreen', 'DarkSlateBlue', 'DarkSlateGray', 'DarkTurquoise', 'DarkViolet', 'DeepPink', 'DeepSkyBlue', 'DimGray', 'DodgerBlue', 'FireBrick', 'ForestGreen', 'Fuchsia', 'Gold', 'GoldenRod', 'Gray', 'Green', 'GreenYellow', 'HotPink', 'IndianRed ', 'Indigo ', 'LawnGreen', 'LightBlue', 'LightCoral', 'LightGreen', 'LightPink', 'LightSalmon', 'LightSeaGreen', 'LightSkyBlue', 'LightSlateGray', 'LightSteelBlue', 'Lime', 'LimeGreen', 'Magenta', 'Maroon', 'MediumAquaMarine', 'MediumBlue', 'MediumOrchid', 'MediumPurple', 'MediumSeaGreen', 'MediumSlateBlue', 'MediumTurquoise', 'MediumVioletRed', 'MidnightBlue', 'Navy', 'Olive', 'OliveDrab', 'Orange', 'OrangeRed', 'Orchid', 'PaleVioletRed', 'Peru', 'Pink', 'Plum', 'Purple', 'RebeccaPurple', 'Red', 'RosyBrown', 'RoyalBlue', 'SaddleBrown', 'Salmon', 'SandyBrown', 'SeaGreen', 'Sienna', 'SkyBlue', 'SlateBlue', 'SlateGray', 'SpringGreen', 'SteelBlue', 'Tan', 'Teal', 'Tomato', 'Turquoise', 'Violet', 'Yellow', 'YellowGreen'],
-	// 		len = colors.length;
+	var setUserColor = function() {
+		var colors = ['Aqua', 'Aquamarine', 'Black', 'Blue', 'BlueViolet', 'Brown', 'CadetBlue', 'Chartreuse', 'Chocolate', 'Coral', 'CornflowerBlue', 'Crimson', 'DarkBlue', 'DarkCyan', 'DarkGoldenRod', 'DarkGray', 'DarkGreen', 'DarkMagenta', 'DarkOliveGreen', 'DarkOrange', 'DarkOrchid', 'DarkRed', 'DarkSalmon', 'DarkSeaGreen', 'DarkSlateBlue', 'DarkSlateGray', 'DarkTurquoise', 'DarkViolet', 'DeepPink', 'DeepSkyBlue', 'DimGray', 'DodgerBlue', 'FireBrick', 'ForestGreen', 'Fuchsia', 'Gold', 'GoldenRod', 'Gray', 'Green', 'GreenYellow', 'HotPink', 'IndianRed ', 'Indigo ', 'LawnGreen', 'LightBlue', 'LightCoral', 'LightGreen', 'LightPink', 'LightSalmon', 'LightSeaGreen', 'LightSkyBlue', 'LightSlateGray', 'LightSteelBlue', 'Lime', 'LimeGreen', 'Magenta', 'Maroon', 'MediumAquaMarine', 'MediumBlue', 'MediumOrchid', 'MediumPurple', 'MediumSeaGreen', 'MediumSlateBlue', 'MediumTurquoise', 'MediumVioletRed', 'MidnightBlue', 'Navy', 'Olive', 'OliveDrab', 'Orange', 'OrangeRed', 'Orchid', 'PaleVioletRed', 'Peru', 'Pink', 'Plum', 'Purple', 'RebeccaPurple', 'Red', 'RosyBrown', 'RoyalBlue', 'SaddleBrown', 'Salmon', 'SandyBrown', 'SeaGreen', 'Sienna', 'SkyBlue', 'SlateBlue', 'SlateGray', 'SpringGreen', 'SteelBlue', 'Tan', 'Teal', 'Tomato', 'Turquoise', 'Violet', 'Yellow', 'YellowGreen'],
+			len = colors.length;
 
-	// 	sgUserColor = colors[Math.floor(len*Math.random())];
+		sgUserColor = colors[Math.floor(len*Math.random())];
 
-	// 	$('.user-color').css('background', sgUserColor);
-	// };
+		document.getElementById('user-color').style.background = sgUserColor;
+	};
 
 
 	/**
 	* send an event to the socket server that will be passed on to all sockets
 	* @returns {undefined}
 	*/
-	var emitEvent = function(eventName, eventData) {
+	var sendEventToSockets = function(eventName, eventData) {
 		var data = {
 			eventName: eventName,
 			eventData: eventData
@@ -139,10 +115,10 @@
 	/**
 	* when remote is tilted, send orientation data and this device's id to the socket
 	* @param {event} e The tiltchange.deviceorientation event sent by device-orientation.js
-	* @param {object} data Data sent accompanying the event
 	* @returns {undefined}
 	*/
-	var tiltChangeHandler = function(e, data) {
+	var tiltChangeHandler = function(e) {
+		const data = e.detail;
 
 		var tiltLR = Math.round(data.tiltLR),
 			tiltFB = Math.round(data.tiltFB),
@@ -161,7 +137,7 @@
 				id: io.id,
 				orientation: sgOrientation
 			};
-			emitEvent('tiltchange', newData);
+			sendEventToSockets('tiltchange', newData);
 		}
 	};
 
@@ -172,13 +148,7 @@
 	* @returns {undefined}
 	*/
 	var initDeviceOrientation = function() {
-		sgOrientation = {
-			tiltLR: 0,
-			tiltFB: 0,
-			dir: 0
-		};
-
-		$('body').on('tiltchange.deviceorientation', tiltChangeHandler);
+		document.body.addEventListener('tiltchange.deviceorientation', tiltChangeHandler);
 	};
 
 
@@ -188,99 +158,52 @@
 	* @returns {undefined}
 	*/
 	var initLoginForm = function() {
-		$('#login-form').on('submit', function(e) {
+		document.getElementById('login-form').addEventListener('submit', function(e) {
 			e.preventDefault();
 
-			var $form = $(e.currentTarget);
-			sgUsername = $form.find('[name="username"]').val() || sgUsername;
+			var form = e.currentTarget;
+			sgUsername = form.querySelector('[name="username"]').value || sgUsername;
 
 			joinRoom();
 		});
 	};
 
 
-	/**
-	* handle clicking calibration button
-	* @returns {undefined}
-	*/
-	var calibrationHandler = function(e) {
-		e.preventDefault();
-		console.log('handler');
-		sgCompassCorrection = sgOrientation.dir;
-	};
-	
+	//-- Start gas and break controls --
 
 
-	/**
-	* initialize the calibration form
-	* @returns {undefined}
-	*/
-	var initCalibrationForm = function() {
-		$('#calibration-form').on('submit', calibrationHandler);
-	};
-
-
-	/**
-	* change the color on the viewer
-	* @returns {undefined}
-	*/
-	var changeColor = function(e) {
-		e.preventDefault();
-
-		var $a = $(e.currentTarget),
-			data = {
-				name: $a.attr('data-color-name'),
-				imgColor: $a.attr('data-img-color'),
-				cssColor: $a.attr('data-css-color')
-			};
-
-		$a.closest('ul')
-			.find('a')
-			.removeClass('is-active');
-		$a.addClass('is-active');
-
-		emitEvent('colorchange', data);
-	};
-	
-
-
-	/**
-	* initialize color picker
-	* @returns {undefined}
-	*/
-	var initColorPicker = function() {
-		var $colorpicker = $('#colorpicker'),
-			$ul = $colorpicker.find('.color-list'),
-			$aSrc = $('#clone-src').find('#color-src');
-
-		for (var i=0, len=sgColors.length; i<len; i++) {
-			var color = sgColors[i];
-			var $li = $('<li></li>'),
-				$a = $aSrc.clone()
-					.removeAttr('id')
-					.appendTo($li);
-
-			$a.attr('data-color-name', color.name)
-				.attr('data-img-color', color.imgColor);
-
-			if (i === 0) {
-				$a.addClass('is-active');
+		/**
+		* handle change in state a behavior
+		* @returns {undefined}
+		*/
+		const changeBehavior = function(prop, value) {
+			const data = {
+				prop: prop,
+				value: value
 			}
+			sendEventToSockets('behaviorchange', data);
+		};
+		
 
-			$a.find('.svg')
-				.css('color', color.cssColor)
-				.end()
-				.find('.color-name')
-				.text(color.name);
 
-			$ul.append($li);
-		}
+		/**
+		* initialize acceleration controller
+		* @returns {undefined}
+		*/
+		const initAccelerationController = function() {
+			const gasBtn = document.getElementById('gas'),
+				brakeBtn = document.getElementById('brake');
 
-		$colorpicker.on('click', 'a', changeColor);
-	};
+			gasBtn.addEventListener('mouseenter', () => { changeBehavior('gas', true); });
+			gasBtn.addEventListener('mouseleave', () => { changeBehavior('gas', false); });
+			brakeBtn.addEventListener('mouseenter', () => { changeBehavior('brake', true); });
+			brakeBtn.addEventListener('mouseleave', () => { changeBehavior('brake', false); });
+
+		};
+
+	//-- End gas and break controls --
 	
-	
-	
+
 
 
 	/**
@@ -288,51 +211,18 @@
 	* @returns {undefined}
 	*/
 	var initRemote = function() {
-		// initIdentifier();
+		console.log('initremote');
 		sgUsername = io.id;
-		// setUserColor();
+		setUserColor();
 		initSocketListeners();
+		initDeviceOrientation();
 		initLoginForm();
-		initCalibrationForm();
-		//joinRoom();
+		initAccelerationController();
 	};
 
 
-	/**
-	* kick off the app once the socket connection is ready
-	* @param {event} e The ready.socket event sent by socket js
-	* @param {Socket} socket This client's socket
-	* @returns {undefined}
-	*/
-	var connectionReadyHandler = function(e, io) {
-		if (io) {
-			initRemote();
-		}
-	};
+	// init when connection is ready	
+	document.addEventListener('connectionready.socket', initRemote);
 
 
-	/**
-	* when device doesn't support deviceorentation, show message
-	* @returns {undefined}
-	*/
-	var nodeviceorientationHandler = function() {
-		
-	};
-	
-	
-	
-	/**
-	* initialize the app
-	* (or rather: set a listener for the socket to be ready, the handler will initialize the app)
-	* @returns {undefined}
-	*/
-	var init = function() {
-		$(document).on('connectionready.socket', connectionReadyHandler)
-				   .on('nosupport.deviceorientation', nodeviceorientationHandler);
-
-	};
-
-	$(document).ready(init);
-
-
-})(jQuery);
+})();
