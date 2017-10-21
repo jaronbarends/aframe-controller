@@ -126,6 +126,10 @@
 
 		dir -= sgCompassCorrection;
 
+		if (sgOrientation.dir !== dir) {
+			directionChangeHandler(dir);
+		}
+
 		if (sgOrientation.tiltLR !== tiltLR || sgOrientation.tiltFB !== tiltFB || sgOrientation.dir !== dir) {
 			sgOrientation = {
 				tiltLR: tiltLR,
@@ -138,7 +142,9 @@
 				orientation: sgOrientation
 			};
 			sendEventToSockets('tiltchange', newData);
+
 		}
+
 	};
 
 
@@ -195,13 +201,62 @@
 				brakeBtn = document.getElementById('brake');
 
 			gasBtn.addEventListener('mouseenter', () => { changeBehavior('gas', true); });
+			gasBtn.addEventListener('touchstart', () => { changeBehavior('gas', true); });
 			gasBtn.addEventListener('mouseleave', () => { changeBehavior('gas', false); });
+			gasBtn.addEventListener('touchend', () => { changeBehavior('gas', false); });
 			brakeBtn.addEventListener('mouseenter', () => { changeBehavior('brake', true); });
+			brakeBtn.addEventListener('touchstart', () => { changeBehavior('brake', true); });
 			brakeBtn.addEventListener('mouseleave', () => { changeBehavior('brake', false); });
+			brakeBtn.addEventListener('touchend', () => { changeBehavior('brake', false); });
 
 		};
 
 	//-- End gas and break controls --
+
+
+	//-- Start direction controller --
+
+		const minAngle = 5,// angle has to be at least 3 degrees
+			maxAngle = 30;// steering angle can vary between 0-30 degrees both sides
+
+
+		/**
+		* handle change in direction; called by tiltchangeHandler
+		* @returns {undefined}
+		*/
+		const directionChangeHandler = function(dir) {
+			// dir will be 0-360;
+			if (dir < 180) {
+				dir = Math.min(dir, maxAngle);
+				if (dir < minAngle) {
+					dir = 0;
+				}
+			} else {
+				dir -= 360;
+				dir = Math.max(dir, -1*maxAngle);
+				if (dir > -1*minAngle) {
+					dir = 0;
+				}
+			}
+			const fractionOfMax = dir/maxAngle;// converts it to value between 0 1 or 0 -1
+
+			// now send the fraction to sockets
+			sendEventToSockets('directionchange', fractionOfMax);
+		};
+		
+
+
+		/**
+		* initialize the direction controller
+		* @returns {undefined}
+		*/
+		const initDirectionController = function() {
+			
+		};
+		
+
+
+	//-- End direction controller --
 	
 
 
@@ -211,13 +266,13 @@
 	* @returns {undefined}
 	*/
 	var initRemote = function() {
-		console.log('initremote');
 		sgUsername = io.id;
 		setUserColor();
 		initSocketListeners();
 		initDeviceOrientation();
 		initLoginForm();
 		initAccelerationController();
+		initDirectionController();
 	};
 
 

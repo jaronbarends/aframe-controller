@@ -1,3 +1,6 @@
+body {
+}
+
 .content-width {
 	margin: 0 auto;
 	width: 90%;
@@ -13,6 +16,8 @@
 
 
 .control {
+	-webkit-touch-callout: none !important;
+	-webkit-user-select: none !important;
 	display: inline-block;
 	width: 100px;
 	height: 100px;

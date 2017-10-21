@@ -22,12 +22,23 @@
 				y: 0,
 				z:0
 			},
+			rotation: {
+				x: 0,
+				y: 0,
+				z: 0
+			},
+			rotationFactor: {// current value of rotation factor between -1 and 1
+				x: 0,
+				y: 0,
+				z: 0
+			},
 			gas: false,
 			brake: false,
 			acceleration: 0,// +1: gas; -1: brake; 0: no change
 		},
-		dSpeed = 0.01,
-		maxSpeed = 0.1;
+		dSpeed = 0.05,
+		maxSpeed = 0.5,
+		dRotationMax = 1;
 
 
 	let tickTimer;// timer for updating the model
@@ -122,6 +133,21 @@
 	
 	
 
+	/**
+	* update player's rotation
+	* called on every tick
+	* @returns {undefined}
+	*/
+	const updateRotation = function() {
+		if (p.rotationFactor.x !== 0 || p.rotationFactor.y !== 0 || p.rotationFactor.z !== 0) {
+			p.rotation.x += p.rotationFactor.x * dRotationMax;
+			p.rotation.y += p.rotationFactor.y * dRotationMax;
+			p.rotation.z += p.rotationFactor.z * dRotationMax;
+			sendEventToSockets('rotationupdate', p.rotation);
+		}
+	};
+	
+
 
 	/**
 	* update the world. yay.
@@ -133,6 +159,7 @@
 		updateAcceleration();
 		updateSpeed();
 		updatePosition();
+		updateRotation();
 
 		tickTimer = setTimeout(tick, 50);
 	};
@@ -145,6 +172,17 @@
 	const behaviorChangeHandler = function(data) {
 		p[data.prop] = data.value;
 	};
+
+
+	/**
+	* handle change in direction
+	* @param {number} fractionOfMax - fraction between 0 and 1 or 0 and -1 of max direction change
+	* @returns {undefined}
+	*/
+	const directionChangeHandler = function(fractionOfMax) {
+		p.rotationFactor.y = fractionOfMax;
+	};
+	
 	
 	
 		
@@ -155,8 +193,9 @@
 	* @returns {undefined}
 	*/
 	var initSocketListeners = function() {
-		io.on('tiltchange', tiltChangeHandler);
+		// io.on('tiltchange', tiltChangeHandler);
 		io.on('behaviorchange', behaviorChangeHandler);
+		io.on('directionchange', directionChangeHandler);
 	};
 
 
@@ -166,7 +205,8 @@
 	* @returns {undefined}
 	*/
 	const startWorld = function() {
-		const playerElm = document.getElementById('car');
+		// const playerElm = document.getElementById('car');
+		const playerElm = document.getElementById('camera');
 		p.pos = playerElm.getAttribute('position');
 
 		// start the tick (heartbeat)

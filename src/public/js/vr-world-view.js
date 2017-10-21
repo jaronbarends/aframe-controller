@@ -25,6 +25,17 @@
 			car.setAttribute('position', pos);
 		}
 	};
+
+
+	/**
+	* update the position of the player
+	* @returns {undefined}
+	*/
+	const rotationUpdateHandler = function(rotation) {
+		if (rotation) {
+			car.setAttribute('rotation', rotation);
+		}
+	};
 	
 		
 	
@@ -35,6 +46,7 @@
 	*/
 	var initSocketListeners = function() {
 		io.on('positionupdate', positionUpdateHandler);
+		io.on('rotationupdate', rotationUpdateHandler);
 	};
 
 
@@ -43,8 +55,8 @@
 	* @returns {undefined}
 	*/
 	const initElms = function() {
-		car = document.getElementById('car');
-		// car = document.getElementById('camera');
+		// car = document.getElementById('car');
+		car = document.getElementById('camera');
 	};
 	
 
