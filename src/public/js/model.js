@@ -32,10 +32,10 @@
 			brake: false,
 			acceleration: 0,// +1: gas; -1: brake; 0: no change
 		},
-		// dSpeed = 0.05,
-		// maxSpeed = 0.5,
-		dSpeed = 0.01,
-		maxSpeed = 0.1,
+		dSpeed = 0.05,
+		maxSpeed = 0.5,
+		// dSpeed = 0.01,
+		// maxSpeed = 0.1,
 		dRotationMax = 1;
 
 
@@ -129,6 +129,7 @@
 	};
 
 
+
 	/**
 	* handle behavior change
 	* @returns {undefined}
@@ -136,6 +137,7 @@
 	const behaviorChangeHandler = function(data) {
 		p[data.prop] = data.value;
 	};
+
 
 
 	/**
@@ -147,9 +149,6 @@
 		p.rotationFactor.y = fractionOfMax;
 	};
 	
-	
-	
-		
 	
 
 	/**
@@ -176,7 +175,6 @@
 		tick();
 	};
 	
-	
 
 
 	/**
@@ -185,8 +183,6 @@
 	* @returns {undefined}
 	*/
 	var initModel = function() {
-		// const scene = document.getElementById('scene');
-		// scene.addEventListener('loaded', startWorld);// kick off when all is loaded
 		initSocketListeners();
 		startWorld();
 	};

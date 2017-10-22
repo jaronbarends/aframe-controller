@@ -1,99 +1,38 @@
-<!DOCTYPE html>
-
-<html>
+<!doctype html>
+<html lang="nl-nl">
 <head>
-
-	<meta charset="utf-8">
-
-	<title>Hub</title>
-
-	<meta name="apple-mobile-web-app-capable" content="yes" />
-	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
-
-	<link type="text/css" rel="stylesheet" href="css/shared.css" />
-	<link type="text/css" rel="stylesheet" href="css/hub.css" />
-	<link type="text/css" rel="stylesheet" href="css/qr-code.css" />
-
-</head>
-
-<body>
-	<h1>Main hub</h1>
-
-	<!-- Start qr-box -->
-		<div id="qr-box" class="qr-box">
-			QR-code for remote:
-			<div id="qr-code" class="qr-code"></div>
-		</div>
-	<!-- End qr-box -->
-
-	<div id="id-box" class="id-box">
-		user id: <span class="user-id"></span>
-	</div>
-
-
-	<!-- Start device-view -->
-	<div class="device-view">
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	
-		<div id="devices-container" class="devices-container">
-			<!-- will be filled with joining devices -->
-		</div>
+	<title>ghostlab wrapper</title>
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	<style>
+		html,
+		body,
+		iframe {
+			overflow: hidden;
+			margin: 0;
+			padding: 0;
+			width: 100%;
+			height: 100%;
+		}
+	</style>
+</head>
+<body>
+	<iframe id="page" styl></iframe>
 
-		<div id="clone-src" class="u-is-hidden">
+	<script>
+		let src="aframe.html";
+		// alert(document.body.clientWidth);
 
-			<div id="device-clone-src" class="user-device u-is-hidden">
-				<div class="user">
-					<!-- user name here -->
-				</div>
+		if (document.body.clientWidth > 700) {
+			src="remote.html";
+		}
 
-				<div class="device-3d-container">
-					<div class="device">
-						<div class="device__face device__face--front">
-							<div class="device__screen">
-								<div class="user-color"></div>
-							</div>
-							<div class="device__button"></div>
-						</div>
-						<div class="device__face device__face--back"></div>
-						<div class="device__face device__face--left"></div>
-						<div class="device__face device__face--right"></div>
-						<div class="device__face device__face--top"></div>
-						<div class="device__face device__face--bottom"></div>
+		document.getElementById('page').setAttribute('src', src);
 
-					</div>
-				</div>
-			</div>
-
-		</div>
-	</div><!-- /.device-view -->
-
-	<!-- End device-view -->
-
-	<!-- Start table-view -->
-
-		<table id="orientation-table" class="table-view gyro-table u-is-hidden">
-			<tr>
-				<th>tilt LR (gamma)</th>
-				<th>tilt FB (beta)</th>
-				<th>dir (alpha)</th>
-			</tr>
-		</table>
-
-	<!-- End table-view -->
-
-
-	<!-- Socket.io library -->
-	<script src="/socket.io/socket.io.js"></script>
-
-	<!-- Main JavaScript file -->
-	<script src="js/hub.js"></script>
-	<script src="js/device-view.js"></script>
-	<script src="js/table-view.js"></script>
-	<script src="js/add-qr-code.js"></script>
-
-	<!-- initialize socket server connection - anything that needs connectionready event should be added before this -->
-	<script src="js/connection-init.js"></script>
-
+	</script>
 </body>
 </html>

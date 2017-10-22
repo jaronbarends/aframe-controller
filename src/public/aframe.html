@@ -8,6 +8,7 @@
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="css/hub.css">
+	<link rel="stylesheet" href="css/qr-code.css">
 	<link rel="stylesheet" href="css/style.css">
 
 	<script src="https://aframe.io/releases/0.7.0/aframe.min.js"></script>
@@ -21,33 +22,41 @@
 			<img id="sky-texture" src="https://cdn.aframe.io/360-image-gallery-boilerplate/img/sechelt.jpg">
 			<img id="groundTexture" src="https://cdn.aframe.io/a-painter/images/floor.jpg">
 		</a-assets>
+
+		<a-entity id="world-rotation-wrapper">
+			<a-entity id="world" position="0 -0.5 0">
+				<a-box position="2 0 -5" color="darkgrey"></a-box>
+				<a-entity id="environment" environment="preset: forest; numDressing: 500"></a-entity>
+			</a-entity><!-- /#world -->
+		</a-entity><!-- /#world-rotation-wrapper -->
 		
-		<a-entity id="player" position="0 0.5 -4">
-			<a-box id="car__body" position="0 0 0" width="1" height="0.6" depth="2" rotation="0 0 0" color="grey">
-				<!-- <a-animation attribute="position" to="0 2.2 -5" direction="alternate" dur="2000" repeat="indefinite"></a-animation> -->
-				<!-- <a-animation attribute="rotation" to="0 360 0"  dur="20000" repeat="indefinite"></a-animation> -->
-				<!-- <a-text value="Jaronyponypaard" position="0 1 0"></a-text> -->
-			</a-box>
-		</a-entity>
-		<a-entity id="environment" environment="preset: forest; numDressing: 500"></a-entity>
-		<a-camera id="camera"
-		  position="0 1 0"
-		  cursor-visible="true"
-		  cursor-scale="2"
-		  cursor-color="#0095DD"
-		  cursor-opacity="0.5">
-		</a-camera>
+			<!-- <a-entity id="player" position="0 0.5 -4"> -->
+			<a-entity id="player" position="0 0 0">
+				<a-box id="car__body" position="0 0 0" width="1" height="0.6" depth="2" rotation="0 0 0" color="maroon">
+					<!-- <a-text value="Jaronyponypaard" position="0 1 0"></a-text> -->
+				</a-box>
+			</a-entity>
 
 
-		<!-- <a-plane position="0 0 -4" rotation="-90 0 0 width="4" height="4" color="green"></a-plane> -->
-		<!-- <a-entity geometry="primitive: sphere; radius: 0.2"
-				light="type: point; color: white; intensity: 1"
-				material="color: white; shader: flat"
-				position=" 2 3 -1"></a-entity> -->
-		<!-- <a-sky color="cornflowerblue"></a-sky> -->
-		<!-- <a-sky src="#sky-texture"></a-sky> -->
-		<!-- <a-light type="ambient" color="#445451"></a-light> -->
+			<a-camera id="camera"
+			  position="0 1 5"
+			  cursor-visible="true"
+			  cursor-scale="2"
+			  cursor-color="#0095DD"
+			  cursor-opacity="0.5">
+			</a-camera>
+
+
+			<!-- <a-plane position="0 0 -4" rotation="-90 0 0 width="4" height="4" color="green"></a-plane> -->
+			<!-- <a-entity geometry="primitive: sphere; radius: 0.2"
+					light="type: point; color: white; intensity: 1"
+					material="color: white; shader: flat"
+					position=" 2 3 -1"></a-entity> -->
+			<!-- <a-sky color="cornflowerblue"></a-sky> -->
+			<!-- <a-sky src="#sky-texture"></a-sky> -->
+			<!-- <a-light type="ambient" color="#445451"></a-light> -->
 		  <!-- <a-light type="point" intensity="2" position="2 4 4" color="#fc0"></a-light> -->
+
 	</a-scene>
 
 	<div class="helper-ui layer-2d">
@@ -87,6 +96,7 @@
 	<script src="js/vr-world-view.js"></script>
 	<script src="js/util-math.js"></script>
 	<script src="js/util-sockets.js"></script>
+	<script src="js/reload-sockets.js"></script>
 
 	<!-- initialize socket server connection - anything that needs connectionready event should be added before this -->
 	<script src="js/connection-init.js"></script>

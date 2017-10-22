@@ -28,34 +28,6 @@
 	
 
 
-	/**
-	* handle socket's acceptance of entry request
-	* @param {object} data Data sent by the socket (currently empty)
-	* @returns {undefined}
-	*/
-	var joinedHandler = function(data) {
-		//this remote has been joined the room
-		document.getElementById('login-form').classList.add('u-is-hidden');
-	};
-
-
-	/**
-	* handle entry of new user in the room
-	* @param {object} users Updated array with users; the newly added user is the last one in the array
-	* @returns {undefined}
-	*/
-	var newUserHandler = function(users) {
-	};
-
-
-	/**
-	* handle user disconnecting 
-	* @returns {undefined}
-	*/
-	var userDisconnectHandler = function() {
-	};
-	
-
 
 	/**
 	* add event listeners for so cket
@@ -63,41 +35,9 @@
 	* @returns {undefined}
 	*/
 	var initSocketListeners = function() {
-		io.on('joined', joinedHandler);
-		io.on('newuser', newUserHandler);
-		io.on('disconnect', userDisconnectHandler);
-	}
-;
-
-	/**
-	* send event to server to request entry to room
-	* @returns {undefined}
-	*/
-	var joinRoom = function() {
-		var user = {
-				role: sgRole,
-				id: io.id,
-				username: sgUsername,
-				color: sgUserColor
-			};
-
-		io.emit('join', user);
+		// io.on('newuser', newUserHandler);
+		// io.on('disconnect', userDisconnectHandler);
 	};
-
-
-	/**
-	* set an identifying color for this user
-	* @returns {undefined}
-	*/
-	var setUserColor = function() {
-		var colors = ['Aqua', 'Aquamarine', 'Black', 'Blue', 'BlueViolet', 'Brown', 'CadetBlue', 'Chartreuse', 'Chocolate', 'Coral', 'CornflowerBlue', 'Crimson', 'DarkBlue', 'DarkCyan', 'DarkGoldenRod', 'DarkGray', 'DarkGreen', 'DarkMagenta', 'DarkOliveGreen', 'DarkOrange', 'DarkOrchid', 'DarkRed', 'DarkSalmon', 'DarkSeaGreen', 'DarkSlateBlue', 'DarkSlateGray', 'DarkTurquoise', 'DarkViolet', 'DeepPink', 'DeepSkyBlue', 'DimGray', 'DodgerBlue', 'FireBrick', 'ForestGreen', 'Fuchsia', 'Gold', 'GoldenRod', 'Gray', 'Green', 'GreenYellow', 'HotPink', 'IndianRed ', 'Indigo ', 'LawnGreen', 'LightBlue', 'LightCoral', 'LightGreen', 'LightPink', 'LightSalmon', 'LightSeaGreen', 'LightSkyBlue', 'LightSlateGray', 'LightSteelBlue', 'Lime', 'LimeGreen', 'Magenta', 'Maroon', 'MediumAquaMarine', 'MediumBlue', 'MediumOrchid', 'MediumPurple', 'MediumSeaGreen', 'MediumSlateBlue', 'MediumTurquoise', 'MediumVioletRed', 'MidnightBlue', 'Navy', 'Olive', 'OliveDrab', 'Orange', 'OrangeRed', 'Orchid', 'PaleVioletRed', 'Peru', 'Pink', 'Plum', 'Purple', 'RebeccaPurple', 'Red', 'RosyBrown', 'RoyalBlue', 'SaddleBrown', 'Salmon', 'SandyBrown', 'SeaGreen', 'Sienna', 'SkyBlue', 'SlateBlue', 'SlateGray', 'SpringGreen', 'SteelBlue', 'Tan', 'Teal', 'Tomato', 'Turquoise', 'Violet', 'Yellow', 'YellowGreen'],
-			len = colors.length;
-
-		sgUserColor = colors[Math.floor(len*Math.random())];
-
-		document.getElementById('user-color').style.background = sgUserColor;
-	};
-
 
 
 
@@ -148,22 +88,6 @@
 
 
 
-	/**
-	* initialize the login form
-	* @returns {undefined}
-	*/
-	var initLoginForm = function() {
-		document.getElementById('login-form').addEventListener('submit', function(e) {
-			e.preventDefault();
-
-			var form = e.currentTarget;
-			sgUsername = form.querySelector('[name="username"]').value || sgUsername;
-
-			joinRoom();
-		});
-	};
-
-
 	//-- Start gas and break controls --
 
 
@@ -192,7 +116,7 @@
 			gasBtn.addEventListener('mouseenter', () => { changeBehavior('gas', true); });
 			gasBtn.addEventListener('touchstart', () => { changeBehavior('gas', true); });
 			gasBtn.addEventListener('mouseleave', () => { changeBehavior('gas', false); });
-			gasBtn.addEventListener('touchend', () => { changeBehavior('gas', false); });
+			gasBtn.addEventListener('touchend', () => { changeBehavior('gas', false); changeBehavior('brake', true); });
 			brakeBtn.addEventListener('mouseenter', () => { changeBehavior('brake', true); });
 			brakeBtn.addEventListener('touchstart', () => { changeBehavior('brake', true); });
 			brakeBtn.addEventListener('mouseleave', () => { changeBehavior('brake', false); });
@@ -235,15 +159,6 @@
 		
 
 
-		/**
-		* initialize the direction controller
-		* @returns {undefined}
-		*/
-		const initDirectionController = function() {
-			
-		};
-		
-
 
 	//-- End direction controller --
 	
@@ -255,13 +170,12 @@
 	* @returns {undefined}
 	*/
 	var initRemote = function() {
-		sgUsername = io.id;
-		setUserColor();
+		// sgUsername = io.id;
+		// setUserColor();
 		initSocketListeners();
 		initDeviceOrientation();
-		initLoginForm();
+		// initLoginForm();
 		initAccelerationController();
-		initDirectionController();
 	};
 
 

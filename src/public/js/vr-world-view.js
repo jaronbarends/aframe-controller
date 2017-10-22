@@ -11,9 +11,13 @@
 	//so let's stick to that.
 
 
-	let player,
+	let scene,
+		worldRotationWrapper,
+		world,
+		player,
 		camera,
-		cameraDistance;
+		cameraDistance,
+		isInVR = false;
 
 
 
@@ -23,13 +27,11 @@
 	* @returns {undefined}
 	*/
 	const updateCameraPosition = function(p) {
-		console.log(p.pos, p.rotation.y);
 		const x = p.pos.x + cameraDistance * window.util.math.sinDeg(p.rotation.y),
 			z = p.pos.z + cameraDistance * window.util.math.cosDeg(p.rotation.y),
 			y = camera.getAttribute('position').y;
 
 		camera.setAttribute('position', {x, y, z});
-		console.log(x,y,z);
 	};
 	
 
@@ -40,9 +42,13 @@
 	* @returns {undefined}
 	*/
 	const positionUpdateHandler = function(p) {
-		player.setAttribute('position', p.pos);
+		// player.setAttribute('position', p.pos);
+		const worldPos = world.getAttribute('position');
+		worldPos.x = -p.pos.x;
+		worldPos.z = -p.pos.z;
+		world.setAttribute('position', worldPos);
 
-		updateCameraPosition(p);
+		// updateCameraPosition(p);
 	};
 
 
@@ -53,8 +59,13 @@
 	*/
 	const rotationUpdateHandler = function(p) {
 		// console.log('rotate', p.rotation);
-		player.setAttribute('rotation', p.rotation);
-		camera.setAttribute('rotation', p.rotation);
+		// player.setAttribute('rotation', p.rotation);
+		// camera.setAttribute('rotation', p.rotation);
+
+		const worldRotation = Object.assign({}, p.rotation);
+		worldRotation.y = -worldRotation.y;
+		// console.log('set:', worldRotation);
+		worldRotationWrapper.setAttribute('rotation', worldRotation);
 	};
 	
 		
@@ -71,17 +82,30 @@
 
 
 	/**
+	* handle entering of VR-mode
+	* @returns {undefined}
+	*/
+	const enterVRHandler = function() {
+		isInVR = true;
+	};
+	
+
+
+	/**
 	* 
 	* @returns {undefined}
 	*/
 	const initWorld = function() {
+		worldRotationWrapper = document.getElementById('world-rotation-wrapper');
+		world = document.getElementById('world');
 		player = document.getElementById('player');
 		camera = document.getElementById('camera');
+
+		scene.addEventListener('enterVR', enterVRHandler);
 
 		// assume that camera is in straight line behind player
 		const playerPos = player.getAttribute('position')
 		cameraDistance = camera.getAttribute('position').z - playerPos.z;
-		console.log(cameraDistance, playerPos);
 	};
 	
 
@@ -93,6 +117,7 @@
 	* @returns {undefined}
 	*/
 	var initVRWorldView = function() {
+		window.r = (y) => { let rot = world.getAttribute('rotation'); console.log(rot); world.setAttribute('rotation', {x: rot.x, y: y, z: rot.z})};
 		initWorld();
 		initSocketListeners();
 	};
@@ -103,7 +128,7 @@
 	* @returns {undefined}
 	*/
 	const init = function() {
-		const scene = document.getElementById('scene');
+		scene = document.getElementById('scene');
 
 		const loadedPromise = new Promise((resolve, reject) => {
 			scene.addEventListener('loaded', resolve);

@@ -30,6 +30,7 @@ h2 {
 }
 
 .layer-2d {
+	display: none;
 	position: absolute;
 	z-index: 1;
 	top: 0;
