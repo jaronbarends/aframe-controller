@@ -39,8 +39,7 @@
 		dRotationMax = 1;
 
 
-	let tickTimer,// timer for updating the model
-		cameraDistance;
+	let tickTimer;// timer for updating the model
 
 
 
@@ -102,11 +101,13 @@
 	* @returns {undefined}
 	*/
 	const updateRotation = function() {
-		if (p.rotationFactor.x !== 0 || p.rotationFactor.y !== 0 || p.rotationFactor.z !== 0) {
-			p.rotation.x += p.rotationFactor.x * dRotationMax;
-			p.rotation.y += p.rotationFactor.y * dRotationMax;
-			p.rotation.z += p.rotationFactor.z * dRotationMax;
-			window.util.sockets.sendEventToSockets('rotationupdate', p);
+		if (p.speed > 0) {
+			if (p.rotationFactor.x !== 0 || p.rotationFactor.y !== 0 || p.rotationFactor.z !== 0) {
+				p.rotation.x += p.rotationFactor.x * dRotationMax;
+				p.rotation.y += p.rotationFactor.y * dRotationMax;
+				p.rotation.z += p.rotationFactor.z * dRotationMax;
+				window.util.sockets.sendEventToSockets('rotationupdate', p);
+			}
 		}
 	};
 	
@@ -167,13 +168,9 @@
 	* @returns {undefined}
 	*/
 	const startWorld = function() {
-		const playerElm = document.getElementById('car'),
+		const playerElm = document.getElementById('player'),
 			cameraElm = document.getElementById('camera');
 		p.pos = playerElm.getAttribute('position');
-
-		// assume that camera is in straight line behind player
-		cameraDistance = cameraElm.getAttribute('position').z - p.pos.z;
-		console.log('dist:', cameraDistance, cameraElm.getAttribute('position'), p.pos);
 
 		// start the tick (heartbeat)
 		tick();
@@ -188,12 +185,39 @@
 	* @returns {undefined}
 	*/
 	var initModel = function() {
-		const scene = document.getElementById('scene');
-		scene.addEventListener('loaded', startWorld);// kick off when all is loaded
+		// const scene = document.getElementById('scene');
+		// scene.addEventListener('loaded', startWorld);// kick off when all is loaded
 		initSocketListeners();
+		startWorld();
 	};
 
 	
-	document.addEventListener('connectionready.socket', initModel);
+
+	/**
+	* initialize all when scene and connection are ready
+	* @returns {undefined}
+	*/
+	const init = function() {
+		const scene = document.getElementById('scene');
+
+		const loadedPromise = new Promise((resolve, reject) => {
+			scene.addEventListener('loaded', resolve);
+		});
+
+		const connectionPromise = new Promise((resolve, reject) => {
+			document.addEventListener('connectionready.socket', resolve);
+		});
+
+
+		// wait until both are ready
+		Promise.all([loadedPromise, connectionPromise])
+			.then(initModel)
+			.catch((e) => {
+				console.warn('something went wrong', e);
+			});
+	};
+
+	// single point of entry
+	document.addEventListener('DOMContentLoaded', init);
 
 })();

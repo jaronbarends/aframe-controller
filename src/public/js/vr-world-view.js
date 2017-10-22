@@ -11,10 +11,27 @@
 	//so let's stick to that.
 
 
-	let car,
-		camera;
+	let player,
+		camera,
+		cameraDistance;
 
 
+
+	/**
+	* update the position of the camera
+	* @param {object} p - The models player-object
+	* @returns {undefined}
+	*/
+	const updateCameraPosition = function(p) {
+		console.log(p.pos, p.rotation.y);
+		const x = p.pos.x + cameraDistance * window.util.math.sinDeg(p.rotation.y),
+			z = p.pos.z + cameraDistance * window.util.math.cosDeg(p.rotation.y),
+			y = camera.getAttribute('position').y;
+
+		camera.setAttribute('position', {x, y, z});
+		console.log(x,y,z);
+	};
+	
 
 
 	/**
@@ -23,7 +40,9 @@
 	* @returns {undefined}
 	*/
 	const positionUpdateHandler = function(p) {
-		car.setAttribute('position', p.pos);
+		player.setAttribute('position', p.pos);
+
+		updateCameraPosition(p);
 	};
 
 
@@ -33,8 +52,9 @@
 	* @returns {undefined}
 	*/
 	const rotationUpdateHandler = function(p) {
-		console.log('rotate', p.rotation);
-		car.setAttribute('rotation', p.rotation);
+		// console.log('rotate', p.rotation);
+		player.setAttribute('rotation', p.rotation);
+		camera.setAttribute('rotation', p.rotation);
 	};
 	
 		
@@ -54,9 +74,14 @@
 	* 
 	* @returns {undefined}
 	*/
-	const initElms = function() {
-		car = document.getElementById('car');
+	const initWorld = function() {
+		player = document.getElementById('player');
 		camera = document.getElementById('camera');
+
+		// assume that camera is in straight line behind player
+		const playerPos = player.getAttribute('position')
+		cameraDistance = camera.getAttribute('position').z - playerPos.z;
+		console.log(cameraDistance, playerPos);
 	};
 	
 
@@ -68,11 +93,36 @@
 	* @returns {undefined}
 	*/
 	var initVRWorldView = function() {
-		initElms();
+		initWorld();
 		initSocketListeners();
 	};
 
 	
-	document.addEventListener('connectionready.socket', initVRWorldView);
+	/**
+	* initialize all when scene and connection are ready
+	* @returns {undefined}
+	*/
+	const init = function() {
+		const scene = document.getElementById('scene');
+
+		const loadedPromise = new Promise((resolve, reject) => {
+			scene.addEventListener('loaded', resolve);
+		});
+
+		const connectionPromise = new Promise((resolve, reject) => {
+			document.addEventListener('connectionready.socket', resolve);
+		});
+
+		// wait until both are ready
+		Promise.all([loadedPromise, connectionPromise])
+			.then(initVRWorldView)
+			.catch((e) => {
+				console.warn('something went wrong', e);
+			});
+	};
+	
+
+	// single point of entry
+	document.addEventListener('DOMContentLoaded', init);
 
 })();
