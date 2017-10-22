@@ -66,17 +66,30 @@
 
 
 	/**
+	* add listener to dummy-link
+	* @returns {undefined}
+	*/
+	const addListenerToLink = function(id, tiltObj) {
+		const elm = document.getElementById(id);
+		elm.addEventListener('click', (e) => {
+			mimicTiltchange(e, tiltObj);
+		});
+	};
+	
+
+
+	/**
 	* initialize dummy remote
 	* @returns {undefined}
 	*/
 	const initControls = function() {
 		const delta = 10;
-		document.getElementById('lr-minus').addEventListener('click', (e) => { mimicTiltchange(e, {tiltLR: -delta}); });
-		document.getElementById('lr-plus').addEventListener('click', (e) => { mimicTiltchange(e, {tiltLR: delta}); });
-		document.getElementById('fb-minus').addEventListener('click', (e) => { mimicTiltchange(e, {tiltFB: -delta}); });
-		document.getElementById('fb-plus').addEventListener('click', (e) => { mimicTiltchange(e, {tiltFB: delta}); });
-		document.getElementById('dir-minus').addEventListener('click', (e) => { mimicTiltchange(e, {dir: -delta}); });
-		document.getElementById('dir-plus').addEventListener('click', (e) => { mimicTiltchange(e, {dir: delta}); });
+		addListenerToLink('lr-minus', {tiltLR: -delta});
+		addListenerToLink('lr-plus', {tiltLR: delta});
+		addListenerToLink('fb-minus', {tiltFB: -delta});
+		addListenerToLink('fb-plus', {tiltFB: delta});
+		addListenerToLink('dir-minus', {dir: -delta});
+		addListenerToLink('dir-plus', {dir: delta});
 	};
 	
 
