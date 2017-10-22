@@ -22,7 +22,7 @@
 			<img id="groundTexture" src="https://cdn.aframe.io/a-painter/images/floor.jpg">
 		</a-assets>
 		
-		<a-entity id="car" position="0 0.5 -2">
+		<a-entity id="car" position="0 0.5 -4">
 			<a-box id="car__body" position="0 0 0" width="1" height="0.6" depth="2" rotation="0 0 0" color="grey">
 				<!-- <a-animation attribute="position" to="0 2.2 -5" direction="alternate" dur="2000" repeat="indefinite"></a-animation> -->
 				<!-- <a-animation attribute="rotation" to="0 360 0"  dur="20000" repeat="indefinite"></a-animation> -->
@@ -85,6 +85,8 @@
 	<script src="js/add-qr-code.js"></script>
 	<script src="js/model.js"></script>
 	<script src="js/vr-world-view.js"></script>
+	<script src="js/util-math.js"></script>
+	<script src="js/util-sockets.js"></script>
 
 	<!-- initialize socket server connection - anything that needs connectionready event should be added before this -->
 	<script src="js/connection-init.js"></script>

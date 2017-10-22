@@ -12,11 +12,6 @@
 
 
 	const p = {// player
-			speed: {
-				x: 0,
-				y: 0,
-				z: 0
-			},
 			pos: {
 				x: 0,
 				y: 0,
@@ -32,55 +27,21 @@
 				y: 0,
 				z: 0
 			},
+			speed: 0,// speed along vetor of rotation
 			gas: false,
 			brake: false,
 			acceleration: 0,// +1: gas; -1: brake; 0: no change
 		},
-		dSpeed = 0.05,
-		maxSpeed = 0.5,
+		// dSpeed = 0.05,
+		// maxSpeed = 0.5,
+		dSpeed = 0.01,
+		maxSpeed = 0.1,
 		dRotationMax = 1;
 
 
-	let tickTimer;// timer for updating the model
+	let tickTimer,// timer for updating the model
+		cameraDistance;
 
-
-	/**
-	* send an event to the socket server that will be passed on to all sockets
-	* @returns {undefined}
-	*/
-	const sendEventToSockets = function(eventName, eventData) {
-		var data = {
-			eventName: eventName,
-			eventData: eventData
-		};
-		io.emit('passthrough', data);
-	};
-
-
-	/**
-	* handle the orientation change of one of the remote devices
-	* @param {object} data Data sent by remote.js's tiltchange event
-	* @returns {undefined}
-	*/
-	var tiltChangeHandler = function(data) {
-		showOrientationData(data);
-	};
-
-
-
-	/**
-	* show orientation data DIFFERENT DEVICES ARE NOT DISTINGUISHED YET
-	* @param {object} data Data sent by remote.js's tiltchange event
-	* @returns {undefined}
-	*/
-	var showOrientationData = function(data) {
-		const orientation = data.orientation;
-
-		// console.log(orientation.tiltLR);
-		p.speed.z += dSpeed;
-		p.speed.z = Math.min(maxSpeed, p.speed.z);
-		// console.log(p.speed.z);
-	};
 
 
 	/**
@@ -106,11 +67,11 @@
 	*/
 	const updateSpeed = function() {
 		if (p.acceleration !== 0) {
-			let newSpeedZ = p.speed.z + p.acceleration * dSpeed
-			newSpeedZ = Math.min(maxSpeed, newSpeedZ);
-			newSpeedZ = Math.max(0, newSpeedZ);
+			let newSpeed = p.speed + p.acceleration * dSpeed
+			newSpeed = Math.min(maxSpeed, newSpeed);
+			newSpeed = Math.max(0, newSpeed);
 
-			p.speed.z = newSpeedZ;
+			p.speed = newSpeed;
 		}
 	};
 	
@@ -119,15 +80,16 @@
 
 	/**
 	* update player's position
+	* and send event to sockets when changed
 	* called on every tick
 	* @returns {undefined}
 	*/
 	const updatePosition = function() {
-		if (p.speed.x !== 0 || p.speed.y !== 0 || p.speed.z !== 0) {
-			p.pos.x += p.speed.x;
-			p.pos.y += p.speed.y;
-			p.pos.z -= p.speed.z;
-			sendEventToSockets('positionupdate', p.pos);
+		if (p.speed !== 0) {
+			p.pos.x +=  -1 * p.speed * window.util.math.sinDeg(p.rotation.y);
+			// p.pos.y += p.speed.y;
+			p.pos.z += -1 * p.speed * window.util.math.cosDeg(p.rotation.y);
+			window.util.sockets.sendEventToSockets('positionupdate', p);
 		}
 	};
 	
@@ -135,6 +97,7 @@
 
 	/**
 	* update player's rotation
+	* and send event to sockets when changed
 	* called on every tick
 	* @returns {undefined}
 	*/
@@ -143,14 +106,14 @@
 			p.rotation.x += p.rotationFactor.x * dRotationMax;
 			p.rotation.y += p.rotationFactor.y * dRotationMax;
 			p.rotation.z += p.rotationFactor.z * dRotationMax;
-			sendEventToSockets('rotationupdate', p.rotation);
+			window.util.sockets.sendEventToSockets('rotationupdate', p);
 		}
 	};
 	
 
 
 	/**
-	* update the world. yay.
+	* the app's heartbeat
 	* @returns {undefined}
 	*/
 	const tick = function() {
@@ -193,7 +156,6 @@
 	* @returns {undefined}
 	*/
 	var initSocketListeners = function() {
-		// io.on('tiltchange', tiltChangeHandler);
 		io.on('behaviorchange', behaviorChangeHandler);
 		io.on('directionchange', directionChangeHandler);
 	};
@@ -205,9 +167,13 @@
 	* @returns {undefined}
 	*/
 	const startWorld = function() {
-		// const playerElm = document.getElementById('car');
-		const playerElm = document.getElementById('camera');
+		const playerElm = document.getElementById('car'),
+			cameraElm = document.getElementById('camera');
 		p.pos = playerElm.getAttribute('position');
+
+		// assume that camera is in straight line behind player
+		cameraDistance = cameraElm.getAttribute('position').z - p.pos.z;
+		console.log('dist:', cameraDistance, cameraElm.getAttribute('position'), p.pos);
 
 		// start the tick (heartbeat)
 		tick();

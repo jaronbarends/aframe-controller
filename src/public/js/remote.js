@@ -99,17 +99,6 @@
 	};
 
 
-	/**
-	* send an event to the socket server that will be passed on to all sockets
-	* @returns {undefined}
-	*/
-	var sendEventToSockets = function(eventName, eventData) {
-		var data = {
-			eventName: eventName,
-			eventData: eventData
-		};
-		io.emit('passthrough', data);
-	};
 
 
 	/**
@@ -141,7 +130,7 @@
 				id: io.id,
 				orientation: sgOrientation
 			};
-			sendEventToSockets('tiltchange', newData);
+			window.util.sockets.sendEventToSockets('tiltchange', newData);
 
 		}
 
@@ -187,7 +176,7 @@
 				prop: prop,
 				value: value
 			}
-			sendEventToSockets('behaviorchange', data);
+			window.util.sockets.sendEventToSockets('behaviorchange', data);
 		};
 		
 
@@ -241,7 +230,7 @@
 			const fractionOfMax = dir/maxAngle;// converts it to value between 0 1 or 0 -1
 
 			// now send the fraction to sockets
-			sendEventToSockets('directionchange', fractionOfMax);
+			window.util.sockets.sendEventToSockets('directionchange', fractionOfMax);
 		};
 		
 

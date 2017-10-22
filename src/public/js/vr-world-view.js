@@ -11,30 +11,30 @@
 	//so let's stick to that.
 
 
-	let car;
+	let car,
+		camera;
 
 
 
 
 	/**
 	* update the position of the player
+	* @param {object} p - The models player-object
 	* @returns {undefined}
 	*/
-	const positionUpdateHandler = function(pos) {
-		if (pos) {
-			car.setAttribute('position', pos);
-		}
+	const positionUpdateHandler = function(p) {
+		car.setAttribute('position', p.pos);
 	};
 
 
 	/**
-	* update the position of the player
+	* update the rotation of the player
+	* @param {object} p - The models player-object
 	* @returns {undefined}
 	*/
-	const rotationUpdateHandler = function(rotation) {
-		if (rotation) {
-			car.setAttribute('rotation', rotation);
-		}
+	const rotationUpdateHandler = function(p) {
+		console.log('rotate', p.rotation);
+		car.setAttribute('rotation', p.rotation);
 	};
 	
 		
@@ -55,8 +55,8 @@
 	* @returns {undefined}
 	*/
 	const initElms = function() {
-		// car = document.getElementById('car');
-		car = document.getElementById('camera');
+		car = document.getElementById('car');
+		camera = document.getElementById('camera');
 	};
 	
 
