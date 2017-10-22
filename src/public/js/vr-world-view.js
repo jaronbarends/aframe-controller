@@ -16,8 +16,7 @@
 		world,
 		player,
 		camera,
-		cameraDistance,
-		isInVR = false;
+		cameraDistance;
 
 
 
@@ -79,15 +78,6 @@
 		io.on('positionupdate', positionUpdateHandler);
 		io.on('rotationupdate', rotationUpdateHandler);
 	};
-
-
-	/**
-	* handle entering of VR-mode
-	* @returns {undefined}
-	*/
-	const enterVRHandler = function() {
-		isInVR = true;
-	};
 	
 
 
@@ -100,8 +90,6 @@
 		world = document.getElementById('world');
 		player = document.getElementById('player');
 		camera = document.getElementById('camera');
-
-		scene.addEventListener('enterVR', enterVRHandler);
 
 		// assume that camera is in straight line behind player
 		const playerPos = player.getAttribute('position')

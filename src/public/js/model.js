@@ -33,10 +33,10 @@
 			acceleration: 0,// +1: gas; -1: brake; 0: no change
 		},
 		dSpeed = 0.05,
-		maxSpeed = 0.5,
+		maxSpeed = 0.3,
 		// dSpeed = 0.01,
 		// maxSpeed = 0.1,
-		dRotationMax = 1;
+		dRotationMax = 10;
 
 
 	let tickTimer;// timer for updating the model

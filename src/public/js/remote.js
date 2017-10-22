@@ -130,7 +130,7 @@
 	//-- Start direction controller --
 
 		const minAngle = 5,// angle has to be at least 3 degrees
-			maxAngle = 30;// steering angle can vary between 0-30 degrees both sides
+			maxAngle = 35;// steering angle can vary between 0-30 degrees both sides
 
 
 		/**
